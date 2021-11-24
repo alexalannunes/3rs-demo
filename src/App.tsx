@@ -1,9 +1,9 @@
-import { Readable } from "./1-readable";
+import { Readability } from "./1-readable";
 
 function App() {
   return (
     <div className="App">
-      <Readable />
+      <Readability />
       <hr />
     </div>
   );

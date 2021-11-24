@@ -10,7 +10,7 @@ const CartComponent = {
 
 const Cart = CartComponent["good"];
 
-const Readable: React.FC = () => {
+const Readability: React.FC = () => {
   return (
     <div>
       <h1>Readability</h1>
@@ -19,4 +19,4 @@ const Readable: React.FC = () => {
   );
 };
 
-export { Readable };
+export { Readability };
