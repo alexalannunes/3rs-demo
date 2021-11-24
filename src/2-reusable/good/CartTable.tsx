@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ICartState, ICurrencyConverter } from "./types";
 
 interface Props extends ICartState {
@@ -6,12 +6,17 @@ interface Props extends ICartState {
 }
 
 const CartTable: React.FC<Props> = (props) => {
-  const [cart] = useState<ICartState>({
+  const [cart, setCart] = useState<ICartState>({
     localCurrency: props.localCurrency,
     products: props.products,
   });
 
-  console.log(props.localCurrency, cart);
+  useEffect(() => {
+    setCart((prev) => ({
+      ...prev,
+      localCurrency: props.localCurrency,
+    }));
+  }, [props]);
 
   return (
     <div>
@@ -34,7 +39,7 @@ const CartTable: React.FC<Props> = (props) => {
                 {props.CurrencyConverter.convert(
                   cart.products[productId].price,
                   cart.products[productId].currency,
-                  props.localCurrency // TODO fix this
+                  cart.localCurrency
                 )}
               </td>
             </tr>
