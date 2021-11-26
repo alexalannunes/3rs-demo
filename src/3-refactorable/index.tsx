@@ -8,15 +8,15 @@ const CartComponent = {
   good: CartGood,
 };
 
-const Cart = CartComponent["good"];
+const Cart = CartComponent["bad"];
 
-const Reusability: React.FC = () => {
+const Refactorability: React.FC = () => {
   return (
     <div>
-      <h1>Reusability</h1>
+      <h1>Refactorability</h1>
       <Cart />
     </div>
   );
 };
 
-export { Reusability };
+export { Refactorability };

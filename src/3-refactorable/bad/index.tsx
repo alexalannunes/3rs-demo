@@ -1,38 +1,41 @@
 /**
- * 2º Reutilização
+ * Código que pode ser refatorado é um código que você pode alterar sem medo. É um código que você pode
+ * implantar em uma sexta-feira à noite e voltar na segunda de manhã sem nenhuma preocupação de que seus
+ * usuários encontrem erros de tempo de execução.
+ * A refatorabilidade diz respeito ao sistema como um todo. É sobre como seus módulos reutilizáveis ​
+ * ​se conectam como peças de LEGO. Se você alterar seu módulo Employee e de alguma forma ele
+ * quebrar seu módulo Reporting, você saberá que tem alguns problemas de refatoração.
+ * A refatorabilidade é a parte mais alta da hierarquia 3 R e é a mais difícil de alcançar e manter.
+ * Sempre haverá problemas com qualquer sistema humano, e o código não é diferente.
+ * No entanto, existem coisas que podemos fazer para tornar nosso código refatorável. Então, quais são eles?
  *
- * A capacidade de reutilização é a única razão pela qual você pode ler este código, comunicar-se com estranhos
- * online e até mesmo programar. A capacidade de reutilização nos permite expressar novas ideias com pequenos pedaços do passado.
- * É por isso que a reutilização é um conceito tão essencial que deve guiar sua arquitetura de software.
- * Normalmente pensamos na reutilização em termos de DRY (Don't Repeat Yourself).
- * Esse é um aspecto disso - não tenha código duplicado se puder abstraí-lo corretamente.
- * A reutilização vai além disso. Trata-se de fazer APIs claras e simples que fazem seu colega
- * programador dizer: "Sim, sei exatamente o que isso faz!" A capacidade de reutilização torna seu código
- * um prazer de trabalhar e significa que você pode enviar recursos com mais rapidez.
- *
- * Existem três problemas principais no código acima:
- *
- * O seletor de moeda é acoplado ao componente de estoque
- * O conversor de moeda é acoplado ao componente de estoque
- * Os dados de inventário são definidos explicitamente no componente de inventário e não são fornecidos ao componente em uma API.
- *
+ * Efeitos colaterais isolados
+ * Testes
+ * Tipos estáticos
  */
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 interface CartStateItem {
-  [id: number]: {
-    product: string;
-    img: string;
-    desc: string;
-    price: number;
-    currency: string;
-  };
+  product: string;
+  img: string;
+  desc: string;
+  price: number;
+  currency: string;
+  id: number;
+}
+interface IProduct {
+  product: string;
+  img: string;
+  desc: string;
+  price: number;
+  currency: string;
+  id: number;
 }
 
 interface CartState {
   localCurrency: string;
-  products: CartStateItem;
+  products: CartStateItem[];
 }
 
 interface CurrencyConversions {
@@ -45,35 +48,49 @@ interface CurrencySymbols {
   [currenyKey: string]: string;
 }
 
+declare global {
+  interface Window {
+    cart: IProduct[];
+  }
+}
+
 const cartGlobal: CartState = {
   localCurrency: "usd",
-  products: {
-    1: {
+  products: [
+    {
       product: "Flashlight",
       img: "https://via.placeholder.com/40",
       desc: "A really great flashlight",
       price: 100,
       currency: "usd",
+      id: 1,
     },
-    2: {
+    {
       product: "Tin can",
       img: "https://via.placeholder.com/40",
       desc: "Pretty much what you would expect from a tin can",
       price: 32,
       currency: "usd",
+      id: 2,
     },
-    3: {
+    {
       product: "Cardboard Box",
       img: "https://via.placeholder.com/40",
       desc: "It holds things",
       price: 5,
       currency: "usd",
+      id: 3,
     },
-  },
+  ],
+};
+
+const onAddToCart = (productId: IProduct) => {
+  window.cart.push(productId);
 };
 
 const Cart: React.FC = () => {
   const [cart, setCart] = useState<CartState>(cartGlobal);
+  const watcherRef = useRef<number>();
 
   const currencyConversions: CurrencyConversions = {
     usd: {
@@ -106,6 +123,33 @@ const Cart: React.FC = () => {
     return currencySymbols[toCurrency] + convertedCurrency;
   };
 
+  const onAddToCartFake = () => {
+    window.cart.push({
+      product: "Cardboard Box",
+      img: "https://via.placeholder.com/40",
+      desc: "It holds things",
+      price: (Math.random() * 10000) | 0,
+      currency: "usd",
+      id: (Math.random() * 10000) | 0,
+    });
+  };
+
+  useEffect(() => {
+    window.cart = window.cart || cartGlobal.products;
+
+    watcherRef.current = window.setInterval(() => {
+      setCart((prev) => ({
+        ...prev,
+        products: window.cart,
+      }));
+      console.log("log watcher", watcherRef.current);
+    }, 1000);
+
+    return () => {
+      window.clearInterval(watcherRef.current);
+    };
+  }, []);
+
   return (
     <div>
       <div>
@@ -117,6 +161,8 @@ const Cart: React.FC = () => {
         </select>
       </div>
       <br />
+      <button onClick={onAddToCartFake}>Add new</button>
+      <br />
       <table style={{ width: "100%" }}>
         <tbody>
           <tr>
@@ -125,17 +171,17 @@ const Cart: React.FC = () => {
             <th>Description</th>
             <th>Price</th>
           </tr>
-          {Object.keys(cart.products).map((productId: any) => (
-            <tr key={productId}>
-              <td>{cart.products[productId].product}</td>
+          {cart.products.map((product) => (
+            <tr key={product.id}>
+              <td>{product.product}</td>
               <td>
-                <img src={cart.products[productId].img} alt="ima" />
+                <img src={product.img} alt="ima" />
               </td>
-              <td>{cart.products[productId].desc}</td>
+              <td>{product.desc}</td>
               <td>
                 {convertCurrency(
-                  cart.products[productId].price,
-                  cart.products[productId].currency,
+                  product.price,
+                  product.currency,
                   cart.localCurrency
                 )}
               </td>
