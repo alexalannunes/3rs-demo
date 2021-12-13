@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { ICartState, ICurrencyConverter } from "./types";
+import { useSelector } from "react-redux";
+import { selectCart } from "./store/cart/cartSlice";
+import { selectCurrency } from "./store/cart/currencySlice";
+import { ICurrencyConverter } from "./types";
 
-interface Props extends ICartState {
+interface Props {
   CurrencyConverter: ICurrencyConverter;
 }
 
 const CartTable: React.FC<Props> = (props) => {
-  const [cart, setCart] = useState<ICartState>({
-    localCurrency: props.localCurrency,
-    products: props.products,
-  });
-
-  useEffect(() => {
-    setCart((prev) => ({
-      ...prev,
-      localCurrency: props.localCurrency,
-    }));
-  }, [props]);
+  const cart = useSelector(selectCart);
+  const localCurrency = useSelector(selectCurrency);
 
   return (
     <div>
@@ -28,18 +22,18 @@ const CartTable: React.FC<Props> = (props) => {
             <th>Description</th>
             <th>Price</th>
           </tr>
-          {Object.keys(cart.products).map((productId: any) => (
+          {Object.keys(cart).map((productId: any) => (
             <tr key={productId}>
-              <td>{cart.products[productId].product}</td>
+              <td>{cart[productId].product}</td>
               <td>
-                <img src={cart.products[productId].img} alt="product" />
+                <img src={cart[productId].img} alt="product" />
               </td>
-              <td>{cart.products[productId].desc}</td>
+              <td>{cart[productId].desc}</td>
               <td>
                 {props.CurrencyConverter.convert(
-                  cart.products[productId].price,
-                  cart.products[productId].currency,
-                  cart.localCurrency
+                  cart[productId].price,
+                  cart[productId].currency,
+                  localCurrency
                 )}
               </td>
             </tr>

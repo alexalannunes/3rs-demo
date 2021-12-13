@@ -1,14 +1,10 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
 import { CartTable } from "./CartTable";
 import { CurrencyConverter } from "./currencyConverter";
 import { CurrencySelector } from "./CurrencySelector";
-import { cartGlobal } from "./store/cart/cartSlice";
 import { ICurrencyConversions } from "./types";
 
 const Cart: React.FC = () => {
-  const [localCurrency, setLocalCurrency] = useState("usd");
-  const products = cartGlobal;
-
   const currencyConversions: ICurrencyConversions = {
     usd: {
       rupee: 66.78,
@@ -17,20 +13,11 @@ const Cart: React.FC = () => {
     },
   };
 
-  const onSelectCurrency = (currency: string) => {
-    setLocalCurrency(currency);
-  };
-
   return (
     <div>
-      <CurrencySelector
-        localCurrency={localCurrency}
-        setGlobalCurrency={onSelectCurrency}
-      />
+      <CurrencySelector />
       <br />
       <CartTable
-        products={products}
-        localCurrency={localCurrency}
         CurrencyConverter={new CurrencyConverter(currencyConversions)}
       />
     </div>
