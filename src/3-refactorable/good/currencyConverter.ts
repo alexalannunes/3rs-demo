@@ -10,6 +10,7 @@ export class CurrencyConverter {
       usd: "$",
       rupee: "₹",
       yuan: "元",
+      brl: "R$ ",
     };
   }
 

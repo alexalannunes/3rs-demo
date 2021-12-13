@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { CartTable } from "./CartTable";
 import { CurrencyConverter } from "./currencyConverter";
 import { CurrencySelector } from "./CurrencySelector";
@@ -10,6 +9,7 @@ const Cart: React.FC = () => {
       rupee: 66.78,
       yuan: 6.87,
       usd: 2,
+      brl: 5.5,
     },
   };
 
