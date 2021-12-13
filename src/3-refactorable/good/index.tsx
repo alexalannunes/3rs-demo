@@ -1,3 +1,4 @@
+import { ButtonNew } from "./ButtonNew";
 import { CartTable } from "./CartTable";
 import { CurrencyConverter } from "./currencyConverter";
 import { CurrencySelector } from "./CurrencySelector";
@@ -17,6 +18,8 @@ const Cart: React.FC = () => {
     <div>
       <CurrencySelector />
       <br />
+      <ButtonNew />
+      <hr />
       <CartTable
         CurrencyConverter={new CurrencyConverter(currencyConversions)}
       />
