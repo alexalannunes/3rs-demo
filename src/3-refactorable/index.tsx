@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Cart as CartBad } from "./bad";
 import { Cart as CartGood } from "./good";
 

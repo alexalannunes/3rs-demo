@@ -14,7 +14,7 @@
  * Tipos estáticos
  */
 
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 interface CartStateItem {
   product: string;
@@ -86,7 +86,7 @@ const cartGlobal: CartState = {
 
 const Cart: React.FC = () => {
   const [cart, setCart] = useState<CartState>(cartGlobal);
-  const watcherRef = useRef<number>();
+  // const watcherRef = useRef<number>();
 
   const currencyConversions: CurrencyConversions = {
     usd: {
@@ -133,16 +133,16 @@ const Cart: React.FC = () => {
   useEffect(() => {
     window.cart = window.cart || cartGlobal.products;
 
-    watcherRef.current = window.setInterval(() => {
-      setCart((prev) => ({
-        ...prev,
-        products: window.cart,
-      }));
-      console.log("log watcher", watcherRef.current);
-    }, 1000);
+    // watcherRef.current = window.setInterval(() => {
+    //   setCart((prev) => ({
+    //     ...prev,
+    //     products: window.cart,
+    //   }));
+    //   console.log("log watcher", watcherRef.current);
+    // }, 1000);
 
     return () => {
-      window.clearInterval(watcherRef.current);
+      // window.clearInterval(watcherRef.current);
     };
   }, []);
 
