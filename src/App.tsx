@@ -1,6 +1,8 @@
+import { Provider } from "react-redux";
 import { Readability } from "./1-readable";
 import { Reusability } from "./2-reusable";
 import { Refactorability } from "./3-refactorable";
+import store from "./3-refactorable/good/store";
 
 function App() {
   return (
@@ -9,7 +11,9 @@ function App() {
       <hr />
       <Reusability />
       <hr />
-      <Refactorability />
+      <Provider store={store}>
+        <Refactorability />
+      </Provider>
     </div>
   );
 }
