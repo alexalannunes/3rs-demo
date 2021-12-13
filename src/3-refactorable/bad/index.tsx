@@ -84,10 +84,6 @@ const cartGlobal: CartState = {
   ],
 };
 
-const onAddToCart = (productId: IProduct) => {
-  window.cart.push(productId);
-};
-
 const Cart: React.FC = () => {
   const [cart, setCart] = useState<CartState>(cartGlobal);
   const watcherRef = useRef<number>();
