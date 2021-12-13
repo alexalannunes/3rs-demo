@@ -1,10 +1,9 @@
 import React, { ChangeEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrency } from "./store/cart/currencySlice";
+import { selectCurrency, setCurrency } from "./store/cart/currencySlice";
 
 const CurrencySelector: React.FC = (props) => {
-  const currencyStore = useSelector((state: any) => state.currency);
-
+  const currencyStore = useSelector(selectCurrency);
   const [localCurrency, setLocalCurrency] = useState(currencyStore);
 
   const dispatch = useDispatch();
