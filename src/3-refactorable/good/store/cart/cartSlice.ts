@@ -30,7 +30,7 @@ const cartSlice = createSlice({
   initialState: cartGlobal,
   reducers: {
     addToCard: (state: any, action): any => {
-      return [...state, action.payload];
+      return { ...state, ...action.payload };
     },
   },
 });
