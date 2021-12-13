@@ -7,7 +7,7 @@ const CartComponent = {
   good: CartGood,
 };
 
-const Cart = CartComponent["bad"];
+const Cart = CartComponent["good"];
 
 const Refactorability: React.FC = () => {
   return (
